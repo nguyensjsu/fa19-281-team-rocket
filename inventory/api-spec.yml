@@ -1,0 +1,143 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: 'Inventory API'
+  description: 'Inventory API'
+paths: 
+  /ping:
+   get:
+    tags:
+     - Ping
+    description: "Check ping status"
+    responses:
+     '200':
+       description: OK
+  /inventory:
+   get:
+    tags:
+     - Inventory
+    description: "Return all inventory"
+    produces:
+      - "application/json"
+    responses:
+     '200':
+       description: "succesful operation"
+    security:
+    - api_key: []
+   post:
+    summary: "Create new item"
+    description: "Return success or failure"
+    operationId: "createitem"
+    produces:
+    - "application/json"
+    parameters:
+    - in: "body"
+      name: "body"
+      description: "item object to create"
+      required: true
+      schema:
+       $ref: "#/definitions/item"
+    responses:
+        201:
+          description: "Created"
+        400:
+          description: "Invalid item supplied"
+  /inventory/{inventoryId}:
+   get:
+    summary: "Find item by id"
+    description: "Return single item"
+    operationId: "getitembyid"
+    produces:
+    - "application/json"
+    parameters:
+    - name: "inventoryId"
+      in: "path"
+      description: "The id of item to be fetched"
+      required: true
+      type: "string"
+    responses:
+      200:
+       description: "succesful operation"
+       schema:
+        $ref: "#/definitions/item"
+      404:
+        description: "item not found"
+   put:
+    summary: "Update item"
+    description: "Return success or failure"
+    operationId: "updateitembyid"
+    produces:
+    - "application/json"
+    parameters:
+    - name: "inventoryId"
+      in: "path"
+      description: "The id of item to be updated" 
+      required: true
+      type: "string"
+    - in: "body"
+      name: "body"
+      description: "item object to update"
+      required: true
+      schema:
+       $ref: "#/definitions/item"
+    responses:
+        201:
+          description: "Updated"
+        400:
+          description: "Invalid item supplied"
+        404:
+          description: "Item not found"
+   delete:
+    summary: "Delete item by id"
+    description: "Delete single item"
+    operationId: "deleteitembyid"
+    produces:
+    - "application/json"
+    parameters:
+    - name: "inventoryId"
+      in: "path"
+      description: "The id of item to be deleted"
+      required: true
+      type: "string"
+    responses:
+      400:
+        description: "invalid item id supplied"
+      404:
+        description: "item not found"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+ item:
+  type: "object"
+  required:
+  - "name"
+  - "quantity"
+  properties:
+    id:
+      type: "integer"
+      format: "int64"
+    inventoryId:
+      type: "integer"
+      format: "int64"
+    quantity:
+      type: "integer"
+      format: "int32"
+    name:
+      type: "string"
+    description:
+      type: "string"
+    category:
+      type: "string"
+
+        
+
+   
+    
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /team-rocket1/inventory-api/1.0
+schemes:
+ - https
