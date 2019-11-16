@@ -5,7 +5,6 @@ import (
         "log"
         "net/http"
 		"encoding/json"
-		"io/ioutil"
         "github.com/codegangsta/negroni"
      //   "github.com/streadway/amqp"
         "github.com/gorilla/mux"
@@ -163,12 +162,13 @@ func updateItemHandler(formatter *render.Render) http.HandlerFunc {
 		params := mux.Vars(req)
 		var iid string = params["id"]
 		log.Println("Update request for " + iid)
-		htmlData, err := ioutil.ReadAll(req.Body)
-		log.Println(string(htmlData));
-		//var raw map[string]interface{}
-		res:= Item{}
-		json.Unmarshal([]byte(string(htmlData)), &res)
-		change := bson.M{res}
+		decoder := json.NewDecoder(req.Body)
+		var item Item
+		err := decoder.Decode(&item)
+		if err != nil {
+			panic(err)
+		}
+		log.Println(item)
 		//change := bson.M{"test" : "one"}
     	// string to int
 		i, err := strconv.Atoi(iid)
@@ -183,7 +183,7 @@ func updateItemHandler(formatter *render.Render) http.HandlerFunc {
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
-		c.Update(bson.M{"inventoryid" : i }, change)
+		c.Update(bson.M{"inventoryid" : i }, item)
 		if err != nil {
             log.Fatal(err)
 		}
