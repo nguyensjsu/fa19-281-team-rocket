@@ -4,6 +4,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import User from "./User";
 import Inventory from "./Item";
+import Header from "./Header";
 
 class Main extends Component {
   state = {};
@@ -14,6 +15,7 @@ class Main extends Component {
         <Route path="/signup" component={Signup} />
         <Route path="/user" component={User} />
         <Route path="/inventory" component={Inventory} />
+        <Route path="/header" component={Header} />
       </div>
     );
   }
