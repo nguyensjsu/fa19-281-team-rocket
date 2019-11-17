@@ -22,3 +22,6 @@ Time to Spend
 Task1 : 5 hours
 Task2 : ??
 
+WEEK 2 (11/16/19 - 11/23/19)
+
+11/16/19: Deployed mongo cluster, made docker images for the inventory microservice, deployed and tested the api

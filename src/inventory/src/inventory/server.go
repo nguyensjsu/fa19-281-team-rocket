@@ -16,9 +16,12 @@ import (
 )
 
 // MongoDB Config
-var mongodb_server = "localhost"
+var mongodb_server = "10.0.3.176:27017"
 var mongodb_database = "inventory"
 var mongodb_collection = "items"
+
+var username = "admin"
+var password = "Welcome_1"
 
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
@@ -66,7 +69,11 @@ func inventoryHandler(formatter *render.Render) http.HandlerFunc {
 			}
 			defer session.Close()
 			var results []bson.M
-			session.SetMode(mgo.Monotonic, true)
+			admindb := session.DB("admin")
+			err = admindb.Login(username, password)
+			if err !=nil {
+				panic(err)
+			}
 			c := session.DB(mongodb_database).C(mongodb_collection)
 			err = c.Find(bson.M{}).All(&results)
 			if err != nil {
@@ -91,7 +98,11 @@ func createItemHandler(formatter *render.Render) http.HandlerFunc {
             panic(err)
 		}
 		defer session.Close()
-		session.SetMode(mgo.Monotonic, true)
+		admindb := session.DB("admin")
+			err = admindb.Login(username, password)
+			if err !=nil {
+				panic(err)
+			}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		c.Insert(i)
 		if err != nil {
@@ -119,6 +130,11 @@ func getItemHandler(formatter *render.Render) http.HandlerFunc {
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
+		admindb := session.DB("admin")
+		err = admindb.Login(username, password)
+		if err !=nil {
+			panic(err)
+		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		c.Find(bson.M{"inventoryid" : i }).One(&result)
 		if err != nil {
@@ -146,7 +162,11 @@ func deleteItemHandler(formatter *render.Render) http.HandlerFunc {
             panic(err)
 		}
 		defer session.Close()
-		session.SetMode(mgo.Monotonic, true)
+		admindb := session.DB("admin")
+		err = admindb.Login(username, password)
+		if err !=nil {
+			panic(err)
+		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		c.Remove(bson.M{"inventoryid" : i })
 		if err != nil {
@@ -182,6 +202,11 @@ func updateItemHandler(formatter *render.Render) http.HandlerFunc {
 		}
 		defer session.Close()
 		session.SetMode(mgo.Monotonic, true)
+		admindb := session.DB("admin")
+		err = admindb.Login(username, password)
+		if err !=nil {
+			panic(err)
+		}
 		c := session.DB(mongodb_database).C(mongodb_collection)
 		c.Update(bson.M{"inventoryid" : i }, item)
 		if err != nil {
