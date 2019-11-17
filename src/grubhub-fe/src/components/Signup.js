@@ -6,6 +6,7 @@ class Signup extends Component {
   state = {};
   render() {
     return (
+      
       <Form className="login-page">
         <h1 className="text-center" style={{ color: "red" }}>
           <span className="font-weight-bold">GrubHub</span>
