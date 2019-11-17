@@ -11,11 +11,14 @@ class Main extends Component {
   render() {
     return (
       <div>
+        <Route path="/header" component={Header} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/user" component={User} />
+        
+        
         <Route path="/inventory" component={Inventory} />
-        <Route path="/header" component={Header} />
+        
       </div>
     );
   }

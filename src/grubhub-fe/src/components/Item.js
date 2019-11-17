@@ -3,6 +3,8 @@ import {  Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle, Button } f
 import { Row, Col, Container } from 'reactstrap';
 import "../App.css";
 import axios from 'axios';
+import Header from './Header'
+
 
 class Item extends Component {
     constructor(props){
@@ -44,8 +46,10 @@ class Inventory extends Component {
     render() {
         console.log("State : " + this.state.items)
         return (
+           
             <Container fluid>
-                <Row>
+             <Header/>
+            <Row>
                 {this.state.items.map(item => <Item item={item}/>)}
             </Row>
             </Container>
