@@ -56,12 +56,14 @@ func failOnError(err error, msg string) {
 // API Ping Handler
 func pingHandler(formatter *render.Render) http.HandlerFunc {
         return func(w http.ResponseWriter, req *http.Request) {
+				enableCors(&w)
                 formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
         }
 }
 
 func inventoryHandler(formatter *render.Render) http.HandlerFunc {
 		return func(w http.ResponseWriter, req *http.Request) {
+			enableCors(&w)
         	fmt.Println("Returning full inventory..")
                 session, err := mgo.Dial(mongodb_server)
         	if err != nil {
@@ -86,6 +88,7 @@ func inventoryHandler(formatter *render.Render) http.HandlerFunc {
 
 func createItemHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		enableCors(&w)
 		decoder := json.NewDecoder(req.Body)
 		var i Item
 		err := decoder.Decode(&i)
@@ -114,6 +117,7 @@ func createItemHandler(formatter *render.Render) http.HandlerFunc {
 
 func getItemHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		enableCors(&w)
 		params := mux.Vars(req)
 		var iid string = params["id"]
 		log.Println("Get request for " + iid)
@@ -147,6 +151,7 @@ func getItemHandler(formatter *render.Render) http.HandlerFunc {
 
 func deleteItemHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		enableCors(&w)
 		params := mux.Vars(req)
 		var iid string = params["id"]
 		log.Println("Delete request for " + iid)
@@ -179,6 +184,7 @@ func deleteItemHandler(formatter *render.Render) http.HandlerFunc {
 
 func updateItemHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
+		enableCors(&w)
 		params := mux.Vars(req)
 		var iid string = params["id"]
 		log.Println("Update request for " + iid)
@@ -213,4 +219,9 @@ func updateItemHandler(formatter *render.Render) http.HandlerFunc {
             log.Fatal(err)
 		}
 	}
+}
+
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
