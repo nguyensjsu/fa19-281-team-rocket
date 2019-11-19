@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -16,11 +17,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Person struct {
-	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Firstname string             `json:"firstname,omitempty" bson:"firstname,omitempty"`
-	Lastname  string             `json:"lastname,omitempty" bson:"lastname,omitempty"`
-}
+// type Person struct {
+// 	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+// 	Firstname string             `json:"firstname,omitempty" bson:"firstname,omitempty"`
+// 	Lastname  string             `json:"lastname,omitempty" bson:"lastname,omitempty"`
+// }
 
 // {
 //     "InventoryID" : "2",
@@ -49,57 +50,57 @@ type Orders struct {
 
 var client *mongo.Client
 
-func CreatePersonEndpoint(response http.ResponseWriter, request *http.Request) {
-	response.Header().Set("content-type", "application/json")
-	var person Person
-	_ = json.NewDecoder(request.Body).Decode(&person)
-	fmt.Println(person)
-	collection := client.Database("mongo").Collection("people")
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	result, _ := collection.InsertOne(ctx, person)
-	json.NewEncoder(response).Encode(result)
-}
+// func CreatePersonEndpoint(response http.ResponseWriter, request *http.Request) {
+// 	response.Header().Set("content-type", "application/json")
+// 	var person Person
+// 	_ = json.NewDecoder(request.Body).Decode(&person)
+// 	fmt.Println(person)
+// 	collection := client.Database("mongo").Collection("people")
+// 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+// 	result, _ := collection.InsertOne(ctx, person)
+// 	json.NewEncoder(response).Encode(result)
+// }
 
-func GetPeopleEndpoint(response http.ResponseWriter, request *http.Request) {
-	response.Header().Set("content-type", "application/json")
-	var people []Person
-	collection := client.Database("mongo").Collection("people")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	cursor, err := collection.Find(ctx, bson.M{})
-	if err != nil {
-		response.WriteHeader(http.StatusInternalServerError)
-		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
-		return
-	}
-	defer cursor.Close(ctx)
-	for cursor.Next(ctx) {
-		var person Person
-		cursor.Decode(&person)
-		people = append(people, person)
-	}
-	if err := cursor.Err(); err != nil {
-		response.WriteHeader(http.StatusInternalServerError)
-		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
-		return
-	}
-	json.NewEncoder(response).Encode(people)
-}
+// func GetPeopleEndpoint(response http.ResponseWriter, request *http.Request) {
+// 	response.Header().Set("content-type", "application/json")
+// 	var people []Person
+// 	collection := client.Database("mongo").Collection("people")
+// 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+// 	cursor, err := collection.Find(ctx, bson.M{})
+// 	if err != nil {
+// 		response.WriteHeader(http.StatusInternalServerError)
+// 		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+// 		return
+// 	}
+// 	defer cursor.Close(ctx)
+// 	for cursor.Next(ctx) {
+// 		var person Person
+// 		cursor.Decode(&person)
+// 		people = append(people, person)
+// 	}
+// 	if err := cursor.Err(); err != nil {
+// 		response.WriteHeader(http.StatusInternalServerError)
+// 		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+// 		return
+// 	}
+// 	json.NewEncoder(response).Encode(people)
+// }
 
-func GetPersonEndpoint(response http.ResponseWriter, request *http.Request) {
-	response.Header().Set("content-type", "application/json")
-	params := mux.Vars(request)
-	id, _ := primitive.ObjectIDFromHex(params["id"])
-	var person Person
-	collection := client.Database("mongo").Collection("people")
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
-	err := collection.FindOne(ctx, Person{ID: id}).Decode(&person)
-	if err != nil {
-		response.WriteHeader(http.StatusInternalServerError)
-		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
-		return
-	}
-	json.NewEncoder(response).Encode(person)
-}
+// func GetPersonEndpoint(response http.ResponseWriter, request *http.Request) {
+// 	response.Header().Set("content-type", "application/json")
+// 	params := mux.Vars(request)
+// 	id, _ := primitive.ObjectIDFromHex(params["id"])
+// 	var person Person
+// 	collection := client.Database("mongo").Collection("people")
+// 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+// 	err := collection.FindOne(ctx, Person{ID: id}).Decode(&person)
+// 	if err != nil {
+// 		response.WriteHeader(http.StatusInternalServerError)
+// 		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+// 		return
+// 	}
+// 	json.NewEncoder(response).Encode(person)
+// }
 
 //creates new order (POST: /newOrder)
 func CreateNewOrder(response http.ResponseWriter, request *http.Request) {
@@ -150,8 +151,6 @@ func GetOrderStatus(response http.ResponseWriter, request *http.Request) {
 	response.Write([]byte(`{ "orderStatus": "` + strconv.Itoa(orders.OrderStatus) + `" }`))
 }
 
-//update order status
-
 //get all order(GET: /orders)
 func GetAllOrders(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
@@ -178,7 +177,7 @@ func GetAllOrders(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(orders)
 }
 
-//get all orders of a particular user
+//get all orders of a particular user (GET: /allOrdersByEmail/{uEmail})
 func GetAllOrdersByUserEmail(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	//response.Header().Set("content-type", "application/json")
@@ -209,7 +208,7 @@ func GetAllOrdersByUserEmail(response http.ResponseWriter, request *http.Request
 	json.NewEncoder(response).Encode(orders)
 }
 
-//get all orders by status
+//get all orders by status (GET: /allOrdersByStatus/{status})
 func GetAllOrdersByStatus(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	//response.Header().Set("content-type", "application/json")
@@ -246,8 +245,8 @@ func GetAllOrdersByStatus(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(orders)
 }
 
-//delete order by id
-func deleteById(response http.ResponseWriter, request *http.Request) {
+//delete order by id (DELETE: /deleteOrder/{id})
+func DeleteById(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
@@ -259,6 +258,33 @@ func deleteById(response http.ResponseWriter, request *http.Request) {
 		log.Fatal("Error on deleting one Hero")
 	}
 	response.Write([]byte(`{ "message": "order deleted" }`))
+}
+
+//update order status (PUT: /updateOrderStatus/{id}/{status})
+func UpdateOrdeStatus(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("content-type", "application/json")
+	//response.Header().Set("content-type", "application/json")
+	params := mux.Vars(request)
+	id, _ := primitive.ObjectIDFromHex(params["id"])
+	status := params["status"]
+	intStatus, err := strconv.Atoi(status)
+	if err != nil {
+		// handle error
+		fmt.Println(err)
+		//os.Exit(2)
+	}
+	collection := client.Database("mongo").Collection("orders")
+	filter := bson.M{"_id": bson.M{"$eq": id}}
+	update := bson.M{"$set": bson.M{"orderStatus": intStatus}}
+	result, err := collection.UpdateOne(context.Background(),
+		filter,
+		update)
+	if err != nil {
+		fmt.Println("UpdateOne() result ERROR:", err)
+		os.Exit(1)
+	}
+	fmt.Println(result)
+	//response.Write([]byte(`{ "message": "` + + `" }`))
 }
 
 func main() {
@@ -276,6 +302,7 @@ func main() {
 	router.HandleFunc("/orders", GetAllOrders).Methods("GET")
 	router.HandleFunc("/allOrdersByStatus/{status}", GetAllOrdersByStatus).Methods("GET")
 	router.HandleFunc("/allOrdersByEmail/{uEmail}", GetAllOrdersByUserEmail).Methods("GET")
-	router.HandleFunc("/deleteOrder/{id}", deleteById).Methods("GET")
+	router.HandleFunc("/deleteOrder/{id}", DeleteById).Methods("DELETE")
+	router.HandleFunc("/updateOrderStatus/{id}/{status}", UpdateOrdeStatus).Methods("PUT")
 	http.ListenAndServe(":12345", router)
 }
