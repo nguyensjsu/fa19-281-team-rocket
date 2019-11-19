@@ -5,6 +5,7 @@ import Signup from "./Signup";
 import User from "./User";
 import Inventory from "./Item";
 import Header from "./Header";
+import Payment from "./Payment";
 
 class Main extends Component {
   state = {};
@@ -18,6 +19,7 @@ class Main extends Component {
         
         
         <Route path="/inventory" component={Inventory} />
+        <Route path="/payment" component={Payment} />
         
       </div>
     );
