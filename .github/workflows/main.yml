@@ -10,7 +10,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Run multiline command
       env:
-        HEROKU_API_TOKEN: "9941105d-b1c3-4e7b-a1ad-634ac3fbedac"
+        HEROKU_API_TOKEN: "c21e1a0e-c178-453b-89be-33f595d689c8"
         HEROKU_APP_NAME: "grubhub-clone" 
-      run: git subtree push --prefix src/grubhub-fe https://heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git origin/master:master
-        
+      run: git subtree push --prefix src/grubhub-fe https://heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git master
