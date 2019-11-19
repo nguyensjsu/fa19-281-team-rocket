@@ -71,7 +71,7 @@ class Header extends Component{
                                     {items}
                                     <DropdownItem divider />
                                     <DropdownItem >
-                                        Item Subtotal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${this.state.itemSubTotal}
+                                        Item Subtotals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${this.state.itemSubTotal}
                                     </DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem >
