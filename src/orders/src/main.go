@@ -99,6 +99,7 @@ func GetPersonEndpoint(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(person)
 }
 
+//creates new order (POST: /newOrder)
 func CreateNewOrder(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	var orders Orders
@@ -113,6 +114,33 @@ func CreateNewOrder(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(result)
 }
 
+//get order by Id (GET: /order/{id})
+func GetOrderById(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("content-type", "application/json")
+	params := mux.Vars(request)
+	id, _ := primitive.ObjectIDFromHex(params["id"])
+	var orders Orders
+	collection := client.Database("mongo").Collection("orders")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	err := collection.FindOne(ctx, Orders{ID: id}).Decode(&orders)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+		return
+	}
+	json.NewEncoder(response).Encode(orders)
+}
+
+//get Order status
+
+//update order status
+
+//get all order
+
+//get all orders of a particular user
+
+//get all orders by status
+
 func main() {
 	fmt.Println("Starting the application...")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
@@ -123,5 +151,6 @@ func main() {
 	router.HandleFunc("/people", GetPeopleEndpoint).Methods("GET")
 	router.HandleFunc("/person/{id}", GetPersonEndpoint).Methods("GET")
 	router.HandleFunc("/newOrder", CreateNewOrder).Methods("POST")
+	router.HandleFunc("/order/{id}", GetOrderById).Methods("GET")
 	http.ListenAndServe(":12345", router)
 }
