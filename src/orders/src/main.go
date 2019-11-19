@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -147,16 +148,118 @@ func GetOrderStatus(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	response.Write([]byte(`{ "orderStatus": "` + strconv.Itoa(orders.OrderStatus) + `" }`))
-	//json.NewEncoder(response).Encode(orders)
 }
 
 //update order status
 
-//get all order
+//get all order(GET: /orders)
+func GetAllOrders(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("content-type", "application/json")
+	var orders []Orders
+	collection := client.Database("mongo").Collection("orders")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	cursor, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+		return
+	}
+	defer cursor.Close(ctx)
+	for cursor.Next(ctx) {
+		var o Orders
+		cursor.Decode(&o)
+		orders = append(orders, o)
+	}
+	if err := cursor.Err(); err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+		return
+	}
+	json.NewEncoder(response).Encode(orders)
+}
 
 //get all orders of a particular user
+func GetAllOrdersByUserEmail(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("content-type", "application/json")
+	//response.Header().Set("content-type", "application/json")
+	params := mux.Vars(request)
+	email := params["uEmail"]
+	var orders []Orders
+	collection := client.Database("mongo").Collection("orders")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	cursor, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+		return
+	}
+	defer cursor.Close(ctx)
+	for cursor.Next(ctx) {
+		var o Orders
+		cursor.Decode(&o)
+		if o.UserEmail == email {
+			orders = append(orders, o)
+		}
+	}
+	if err := cursor.Err(); err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+		return
+	}
+	json.NewEncoder(response).Encode(orders)
+}
 
 //get all orders by status
+func GetAllOrdersByStatus(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("content-type", "application/json")
+	//response.Header().Set("content-type", "application/json")
+	params := mux.Vars(request)
+	os := params["status"]
+	i, err := strconv.Atoi(os)
+	if err != nil {
+		// handle error
+		fmt.Println(err)
+		//os.Exit(2)
+	}
+	var orders []Orders
+	collection := client.Database("mongo").Collection("orders")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	cursor, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+		return
+	}
+	defer cursor.Close(ctx)
+	for cursor.Next(ctx) {
+		var o Orders
+		cursor.Decode(&o)
+		if o.OrderStatus == i {
+			orders = append(orders, o)
+		}
+	}
+	if err := cursor.Err(); err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+		return
+	}
+	json.NewEncoder(response).Encode(orders)
+}
+
+//delete order by id
+func deleteById(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("content-type", "application/json")
+	params := mux.Vars(request)
+	id, _ := primitive.ObjectIDFromHex(params["id"])
+	//var orders Orders
+	collection := client.Database("mongo").Collection("orders")
+	//ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	deleteResult, _ := collection.DeleteOne(context.TODO(), bson.M{"_id": id})
+	if deleteResult.DeletedCount == 0 {
+		log.Fatal("Error on deleting one Hero")
+	}
+	response.Write([]byte(`{ "message": "order deleted" }`))
+}
 
 func main() {
 	fmt.Println("Starting the application...")
@@ -164,11 +267,15 @@ func main() {
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	client, _ = mongo.Connect(ctx, clientOptions)
 	router := mux.NewRouter()
-	router.HandleFunc("/person", CreatePersonEndpoint).Methods("POST")
-	router.HandleFunc("/people", GetPeopleEndpoint).Methods("GET")
-	router.HandleFunc("/person/{id}", GetPersonEndpoint).Methods("GET")
+	//router.HandleFunc("/person", CreatePersonEndpoint).Methods("POST")
+	//router.HandleFunc("/people", GetPeopleEndpoint).Methods("GET")
+	//router.HandleFunc("/person/{id}", GetPersonEndpoint).Methods("GET")
 	router.HandleFunc("/newOrder", CreateNewOrder).Methods("POST")
 	router.HandleFunc("/order/{id}", GetOrderById).Methods("GET")
 	router.HandleFunc("/orderStatus/{id}", GetOrderStatus).Methods("GET")
+	router.HandleFunc("/orders", GetAllOrders).Methods("GET")
+	router.HandleFunc("/allOrdersByStatus/{status}", GetAllOrdersByStatus).Methods("GET")
+	router.HandleFunc("/allOrdersByEmail/{uEmail}", GetAllOrdersByUserEmail).Methods("GET")
+	router.HandleFunc("/deleteOrder/{id}", deleteById).Methods("GET")
 	http.ListenAndServe(":12345", router)
 }
