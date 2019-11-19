@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -42,7 +43,7 @@ type Orders struct {
 	IsPaymentSuccess bool               `json:"isPaymentSuccess,omitempty" bson:"isPaymentSuccess,omitempty"`
 	OrderStatus      int                `json:"orderStatus,omitempty" bson:"orderStatus,omitempty"`
 	OrderPlacedTime  int64              `json:"orderPlacedTime,omitempty" bson:"orderPlacedTime,omitempty"`
-	userEmail        string             `json:"userEmail,omitempty" bson:"userEmail,omitempty"`
+	UserEmail        string             `json:"userEmail,omitempty" bson:"userEmail,omitempty"`
 }
 
 var client *mongo.Client
@@ -106,7 +107,7 @@ func CreateNewOrder(response http.ResponseWriter, request *http.Request) {
 	_ = json.NewDecoder(request.Body).Decode(&orders)
 	fmt.Println("here")
 	fmt.Println(orders)
-	orders.OrderStatus = 0
+	orders.OrderStatus = 1
 	orders.OrderPlacedTime = time.Now().Unix()
 	collection := client.Database("mongo").Collection("orders")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
@@ -131,7 +132,23 @@ func GetOrderById(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(orders)
 }
 
-//get Order status
+//get Order status(GET: /order/{id})
+func GetOrderStatus(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("content-type", "application/json")
+	params := mux.Vars(request)
+	id, _ := primitive.ObjectIDFromHex(params["id"])
+	var orders Orders
+	collection := client.Database("mongo").Collection("orders")
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	err := collection.FindOne(ctx, Orders{ID: id}).Decode(&orders)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
+		return
+	}
+	response.Write([]byte(`{ "orderStatus": "` + strconv.Itoa(orders.OrderStatus) + `" }`))
+	//json.NewEncoder(response).Encode(orders)
+}
 
 //update order status
 
@@ -152,5 +169,6 @@ func main() {
 	router.HandleFunc("/person/{id}", GetPersonEndpoint).Methods("GET")
 	router.HandleFunc("/newOrder", CreateNewOrder).Methods("POST")
 	router.HandleFunc("/order/{id}", GetOrderById).Methods("GET")
+	router.HandleFunc("/orderStatus/{id}", GetOrderStatus).Methods("GET")
 	http.ListenAndServe(":12345", router)
 }
