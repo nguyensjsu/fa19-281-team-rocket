@@ -6,16 +6,17 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - name: Run multiline command
-      run:  out=`git diff-tree --no-commit-id --name-only -r $( git rev-parse HEAD) | grep grubhub-fe`
-            echo out
+      env:
+        OUT: "TEST" 
+      run:  OUT=`git diff-tree --no-commit-id --name-only -r $( git rev-parse HEAD) | grep grubhub-fe`
+            echo $OUT
     - name: Deploy to Heroku
       env:
         HEROKU_API_TOKEN: "9941105d-b1c3-4e7b-a1ad-634ac3fbedac"
         HEROKU_APP_NAME: "grubhub-clone"
-      if: out
+      if: OUT
       run: git subtree push --prefix src/grubhub-fe https://heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git origin/master:master
         
