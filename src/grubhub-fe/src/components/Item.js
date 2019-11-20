@@ -15,6 +15,7 @@ import "../App.css";
 import axios from "axios";
 import Header from "./Header";
 import ModalExample from "./modal";
+import Footer from './Footer';
 
 class Item extends Component {
   constructor(props) {
@@ -112,6 +113,7 @@ class Inventory extends Component {
             />
           ))}
         </Row>
+        <Footer/>
       </Container>
     );
   }
