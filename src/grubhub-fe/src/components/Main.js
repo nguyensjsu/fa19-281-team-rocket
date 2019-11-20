@@ -16,11 +16,8 @@ class Main extends Component {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/user" component={User} />
-        
-        
         <Route path="/inventory" component={Inventory} />
         <Route path="/payment" component={Payment} />
-        
       </div>
     );
   }
