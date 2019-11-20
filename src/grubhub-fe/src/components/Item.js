@@ -13,7 +13,7 @@ class Item extends Component {
     render() {
         console.log(this.props)
         return (
-        <Col sm="4">
+        <Col sm="3">
         <Card>
         <CardImg class="card-img-top" top width="100%" src={this.props.item.Image} alt="Card image cap" />
         <CardBody>
