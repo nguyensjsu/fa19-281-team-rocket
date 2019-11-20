@@ -15,12 +15,12 @@ class Item extends Component {
         return (
         <Col sm="4">
         <Card>
-        <CardImg top width="100%" src={this.props.item.Image} alt="Card image cap" />
+        <CardImg class="card-img-top" top width="100%" src={this.props.item.Image} alt="Card image cap" />
         <CardBody>
         <CardTitle>{this.props.item.Name}</CardTitle>
         <CardSubtitle>{this.props.item.Category}</CardSubtitle>
         <CardBody>{this.props.item.Description}</CardBody>
-        <CardText>{this.props.item.Price} Dollars</CardText>
+        <CardText>$ {this.props.item.Price.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</CardText>
          <Button>Add to Cart</Button>
         </CardBody>
       </Card>
