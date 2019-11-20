@@ -1,15 +1,61 @@
 import React, { Component } from "react";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import "../App.css";
+import axios from "axios";
 
 class Signup extends Component {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      userEmail: "",
+      password: "",
+      name: ""
+    };
+
+    this.emailHandler = this.emailHandler.bind(this);
+    this.pwdHandler = this.pwdHandler.bind(this);
+    this.nameHandler = this.nameHandler.bind(this);
+    this.signupHandler = this.signupHandler.bind(this);
+  }
+
+  emailHandler = e => {
+    this.setState({
+      userEmail: e.target.value
+    });
+  };
+
+  pwdHandler = e => {
+    this.setState({
+      password: e.target.value
+    });
+  };
+
+  nameHandler = e => {
+    this.setState({
+      name: e.target.name
+    });
+  };
+
+  signupHandler = e => {
+    const data = {
+      email: this.state.userEmail,
+      password: this.state.password,
+      name: this.state.name
+    };
+
+    axios.post("http://localhost:3001/signup", data).then(response => {
+      console.log("Status Code : ", response.status);
+      if (response.status === 200) {
+        //localStorage.setItem("emailId", this.state.userEmail);
+      }
+    });
+  };
+
   render() {
     return (
-      
       <Form className="login-page">
         <h1 className="text-center" style={{ color: "red" }}>
-          <span className="font-weight-bold">GrubHub</span>
+          <span className="font-weight-bold">R-Tea</span>
         </h1>
         <h2 className="text-center">Sign up</h2>
         <FormGroup>
@@ -20,7 +66,12 @@ class Signup extends Component {
           <Label>Password</Label>
           <Input type="password" placeholder="Password"></Input>
         </FormGroup>
-        <Button className="btn-lg btn-dark btn-block">Submit</Button>
+        <Button
+          className="btn-lg btn-dark btn-block"
+          onClick={this.signupHandler}
+        >
+          Submit
+        </Button>
         <div className="text-center pt-3">Already a user?</div>
         <div className="text-center">
           <a href="/login">Login</a>

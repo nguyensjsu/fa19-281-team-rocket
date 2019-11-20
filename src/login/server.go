@@ -35,8 +35,8 @@ func NewServer() *negroni.Negroni {
 // API Routes
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/login", loginHandler(formatter)).Methods("POST")
-	mx.HandleFunc("/signup", signupHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/login", loginHandler(formatter)).Methods("POST", "OPTIONS")
+	mx.HandleFunc("/signup", signupHandler(formatter)).Methods("POST", "OPTIONS")
 //	mx.HandleFunc("/user/{id}", gumballOrderStatusHandler(formatter)).Methods("GET")
 }
 
@@ -50,7 +50,7 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 // API Signup Handler
 func signupHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
+		enableCors(&w)
 		var user User
 		err := json.NewDecoder(req.Body).Decode(&user)
 		maxWait := time.Duration(5 * time.Second)
@@ -75,7 +75,7 @@ func signupHandler(formatter *render.Render) http.HandlerFunc {
 // API Login Handler
 func loginHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-
+		enableCors(&w)
 		var user User
 		err := json.NewDecoder(req.Body).Decode(&user)
 		maxWait := time.Duration(5 * time.Second)
@@ -97,4 +97,9 @@ func loginHandler(formatter *render.Render) http.HandlerFunc {
 			formatter.JSON(w, http.StatusBadRequest, "Login error")
 		}
 	}
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
 }
