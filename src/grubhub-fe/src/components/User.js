@@ -8,7 +8,7 @@ class User extends Component {
     return (
       <Form className="login-page">
         <h1 className="text-center" style={{ color: "red" }}>
-          <span className="font-weight-bold">Rocket Restaurent</span>
+          <span className="font-weight-bold">R-Tea</span>
         </h1>
         <h2 className="text-center">Welcome</h2>
         <Table>
