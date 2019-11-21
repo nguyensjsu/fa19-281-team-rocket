@@ -32,7 +32,7 @@ class Signup extends Component {
 
   nameHandler = e => {
     this.setState({
-      name: e.target.name
+      name: e.target.value
     });
   };
 
@@ -64,12 +64,24 @@ class Signup extends Component {
         </h1>
         <h2 className="text-center">Sign up</h2>
         <FormGroup>
+          <Label>Name</Label>
+          <Input placeholder="Name" onChange={this.nameHandler}></Input>
+        </FormGroup>
+        <FormGroup>
           <Label>Email</Label>
-          <Input type="email" placeholder="Email"></Input>
+          <Input
+            type="email"
+            placeholder="Email"
+            onChange={this.emailHandler}
+          ></Input>
         </FormGroup>
         <FormGroup>
           <Label>Password</Label>
-          <Input type="password" placeholder="Password"></Input>
+          <Input
+            type="password"
+            placeholder="Password"
+            onChange={this.pwdHandler}
+          ></Input>
         </FormGroup>
         <Button
           className="btn-lg btn-dark btn-block"
