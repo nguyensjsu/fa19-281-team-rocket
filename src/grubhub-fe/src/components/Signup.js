@@ -43,12 +43,17 @@ class Signup extends Component {
       name: this.state.name
     };
 
-    axios.post("http://localhost:3001/signup", data).then(response => {
-      console.log("Status Code : ", response.status);
-      if (response.status === 200) {
-        //localStorage.setItem("emailId", this.state.userEmail);
-      }
-    });
+    axios
+      .post(
+        "https://1px6zgas05.execute-api.us-west-2.amazonaws.com/prod/signup",
+        data
+      )
+      .then(response => {
+        console.log("Status Code : ", response.status);
+        if (response.status === 200) {
+          //localStorage.setItem("emailId", this.state.userEmail);
+        }
+      });
   };
 
   render() {
