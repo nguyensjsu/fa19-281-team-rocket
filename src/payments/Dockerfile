@@ -1,8 +1,8 @@
 FROM golang:latest 
 EXPOSE 3000
-RUN mkdir /app 
-ADD . /app/ 
-WORKDIR /app 
-ENV GOPATH /app
-RUN cd /app ; go install payments
-CMD ["/app/bin/payments"]
+RUN mkdir /payments 
+ADD . /payments/ 
+WORKDIR /payments 
+ENV GOPATH /payments
+RUN cd /payments ; go install payments
+CMD ["/payments/bin/payments"]

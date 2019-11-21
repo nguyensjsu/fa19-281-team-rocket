@@ -11,6 +11,13 @@ import (
 		"gopkg.in/mgo.v2"
 		"gopkg.in/mgo.v2/bson"
 		// "strconv"
+		// "github.com/aws/aws-sdk-go/aws"
+    	// "github.com/aws/aws-sdk-go/aws/session"
+    	// "github.com/aws/aws-sdk-go/service/sns"
+
+    	// "flag"
+
+    	//"os"
 )
 
 // MongoDB Config
@@ -38,10 +45,12 @@ func NewServer() *negroni.Negroni {
 func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	// mx.HandleFunc("/inventory", inventoryHandler(formatter)).Methods("GET")
-	mx.HandleFunc("/addToCart", addItemsToCart(formatter)).Methods("POST")
+	mx.HandleFunc("/addToCart", addItemsToCart(formatter)).Methods("POST","OPTIONS")
 	mx.HandleFunc("/cartItems/{emailId}", getCartItems(formatter)).Methods("GET")
 	// mx.HandleFunc("/inventory/{id}", updateItemHandler(formatter)).Methods("PUT")
 	// mx.HandleFunc("/inventory/{id}", deleteItemHandler(formatter)).Methods("DELETE")
+
+	
 }
 
 // API Ping Handler
@@ -62,17 +71,68 @@ func addItemsToCart(formatter *render.Render) http.HandlerFunc {
 			panic(err)
 		}
 		log.Println(cart)
-		session, err := mgo.Dial(mongodb_server)
+		mongo_session, err := mgo.Dial(mongodb_server)
         if err != nil {
             panic(err)
 		}
-		defer session.Close()
-		session.SetMode(mgo.Monotonic, true)
-		c := session.DB(mongodb_database).C(mongodb_collection_userCart)
+		defer mongo_session.Close()
+		mongo_session.SetMode(mgo.Monotonic, true)
+		c := mongo_session.DB(mongodb_database).C(mongodb_collection_userCart)
 		c.Insert(cart)
+		
 		if err != nil {
             log.Fatal(err)
-        }
+		}
+		
+
+
+		//Adding SNS 
+		// msgPtr := flag.String("m", "Your order is on its way", "The message to send to the subscribed users of the topic")
+		// topicPtr := flag.String("t", "arn:aws:sns:us-west-2:253930511681:Payment", "The ARN of the topic to which the user subscribes")
+		// flag.Parse()
+		// message := *msgPtr
+		// topicArn := *topicPtr
+	
+		// if message == "" || topicArn == "" {
+		// 	fmt.Println("You must supply a message and topic ARN")
+		// 	fmt.Println("Usage: go run SnsPublish.go -m MESSAGE -t TOPIC-ARN")
+		// 	os.Exit(1)
+		// }
+
+		// sess := session.Must(session.NewSessionWithOptions(session.Options{
+		// 	Profile: "profile_name",
+
+		// 	Config: aws.Config{
+		// 		Region: aws.String("us-west-2")
+		// 	}
+
+		// }))
+
+		// sess, err := session.NewSessionWithOptions(session.Options{
+		// 	// Specify profile to load for the session's config
+		// 	Profile: "profile_name",
+		
+		// 	// Provide SDK Config options, such as Region.
+		// 	Config: aws.Config{
+		// 		Region: aws.String("us-west-2"),
+		// 	},
+		
+		// 	// Force enable Shared Config support
+		// 	//SharedConfigState: session.SharedConfigEnable,
+		// })
+	
+		// svc := sns.New(sess)
+	
+		// result, err := svc.Publish(&sns.PublishInput{
+		// 	Message:  aws.String(message),
+		// 	TopicArn: topicPtr,
+		// })
+		// if err != nil {
+		// 	fmt.Println(err.Error())
+		// 	os.Exit(1)
+		// }
+	
+		// fmt.Println(*result.MessageId)
 
 	}
 }
@@ -107,4 +167,5 @@ func getCartItems(formatter *render.Render) http.HandlerFunc {
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
 }
