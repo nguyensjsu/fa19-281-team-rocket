@@ -15,12 +15,12 @@ class Main extends Component {
       <div>
         <Route path="/header" component={Header} />
         <Route path="/login" component={Login} />
-        <Route path="/" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/user" component={User} />
         <Route path="/inventory" component={Inventory} />
         <Route path="/payment" component={Payment} />
         <Route path="/order" component={Order} />
+        <Route path="/" component={Login} />
       </div>
     );
   }
