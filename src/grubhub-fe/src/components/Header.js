@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Table } from "reactstrap";
 import {
   Navbar,
   Nav,
@@ -46,31 +47,28 @@ class Header extends Component {
     });
   }
 
-
   getCartItems = e => {
-    console.log("Calling getCart items api")
-    axios.get(ROOT_URL+`cartItems/sam.mam@gmail.com`)
-    .then((response)=>{
-        var data = response.data
-        console.log("Item",data[0].item)
-        // this.setState({quantity:data[0].quantity})
-        // this.setState({item:data[0].item})
-        // this.setState({price :data[0].price })
-        // var totalSubtotal =  data[0].price * data[0].quantity
-        // this.setState({itemSubTotal:totalSubtotal})
-        var itemSubTotal =0
-        data.map(v =>{
-            var intprice = parseInt(v.price)
-            var intquantity = parseInt(v.quantity)
-            console.log(intprice)
-            console.log(intquantity)
-            itemSubTotal += intprice * intquantity
-        })
-        this.setState({itemSubTotal})
-        this.setState({orderedItems:data})
-    })
-}
-
+    console.log("Calling getCart items api");
+    axios.get(ROOT_URL + `cartItems/sam.mam@gmail.com`).then(response => {
+      var data = response.data;
+      console.log("Item", data[0].item);
+      // this.setState({quantity:data[0].quantity})
+      // this.setState({item:data[0].item})
+      // this.setState({price :data[0].price })
+      // var totalSubtotal =  data[0].price * data[0].quantity
+      // this.setState({itemSubTotal:totalSubtotal})
+      var itemSubTotal = 0;
+      data.map(v => {
+        var intprice = parseInt(v.price);
+        var intquantity = parseInt(v.quantity);
+        console.log(intprice);
+        console.log(intquantity);
+        itemSubTotal += intprice * intquantity;
+      });
+      this.setState({ itemSubTotal });
+      this.setState({ orderedItems: data });
+    });
+  };
 
   render() {
     let items = this.state.orderedItems.map(oitem => {
@@ -97,7 +95,8 @@ class Header extends Component {
                 <h6 className="text-center">Your Orders</h6>
                 <DropdownItem divider />
 
-                {items}
+                <tbody>{items}</tbody>
+
                 <DropdownItem divider />
                 <DropdownItem>
                   Item Subtotals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $

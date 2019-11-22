@@ -27,7 +27,13 @@ const ModalExample = props => {
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" onClick={() => props.onAddToCartClicked(item)}>
+          <Button
+            color="danger"
+            onClick={() => {
+              props.onAddToCartClicked(item);
+              toggle();
+            }}
+          >
             Add to Cart
           </Button>{" "}
         </ModalFooter>

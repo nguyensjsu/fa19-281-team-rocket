@@ -75,16 +75,22 @@ class Inventory extends Component {
   handleAddToCartClicked = item => {
     console.log("Inventory", item);
     //Post to cart
-    axios.post(
-      "https://xy0os460h9.execute-api.us-west-2.amazonaws.com/prod/addToCart",
-      {
-        InventoryID: item.InventoryId,
-        Quantity: item.qnty,
-        Item: item.Name,
-        Price: item.Price,
-        UserEmail: "sam.mam@gmail.com"
-      }
-    );
+    axios
+      .post(
+        "https://xy0os460h9.execute-api.us-west-2.amazonaws.com/prod/addToCart",
+        {
+          InventoryID: "" + item.InventoryId,
+          Quantity: "" + item.qnty,
+          Item: item.Name,
+          Price: item.Price,
+          UserEmail: "sam.mam@gmail.com"
+        }
+      )
+      .then(res => {
+        //const items = res.data;
+        console.log(res);
+        //this.setState({ items });
+      });
     //updateCart();
   };
 
