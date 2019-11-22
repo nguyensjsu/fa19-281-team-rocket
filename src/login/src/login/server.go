@@ -21,7 +21,7 @@ var mongodb_database = "cmpe281"
 var mongodb_collection = "gumballgo"
 
 var username = "admin"
-var password = "megz3189"
+var password = "meg@697"
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
@@ -56,7 +56,7 @@ func signupHandler(formatter *render.Render) http.HandlerFunc {
 		var user User
 		err := json.NewDecoder(req.Body).Decode(&user)
 		maxWait := time.Duration(5 * time.Second)
-		session, err := mgo.DialWithTimeout("10.0.1.145:27017", maxWait)
+		session, err := mgo.DialWithTimeout("10.0.1.36:27017", maxWait)
         if err != nil {
 				fmt.Println("Signup:", err )
                 panic(err)
@@ -86,7 +86,7 @@ func loginHandler(formatter *render.Render) http.HandlerFunc {
 		var user User
 		err := json.NewDecoder(req.Body).Decode(&user)
 		maxWait := time.Duration(5 * time.Second)
-		session, err := mgo.DialWithTimeout("10.0.1.145:27017", maxWait)
+		session, err := mgo.DialWithTimeout("10.0.1.36:27017", maxWait)
         if err != nil {
 				fmt.Println("Signup:", err )
                 panic(err)
