@@ -51,8 +51,11 @@ class Signup extends Component {
       .then(response => {
         console.log("Status Code : ", response.status);
         if (response.status === 200) {
+          localStorage.setItem("name", this.state.name);
           this.props.history.push("/login");
           //localStorage.setItem("emailId", this.state.userEmail);
+        } else {
+          window.alert("Invalid params!!");
         }
       });
   };
