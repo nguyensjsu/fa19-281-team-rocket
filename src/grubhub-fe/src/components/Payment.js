@@ -67,7 +67,7 @@ placeOrder = (e) => {
   //set the with credentials to true
   axios.defaults.withCredentials = true;
   //make a post request with the user data
-  axios.post('http://localhost:3001/payment',data)
+  axios.post('https://ilfey0iy29.execute-api.us-east-2.amazonaws.com/prod/payment',data)
       .then(response => {
           console.log("Status Code : ",response.status);
           if(response.status === 200){
