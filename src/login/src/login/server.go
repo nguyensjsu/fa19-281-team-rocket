@@ -20,6 +20,8 @@ var mongodb_server = "mongodb"
 var mongodb_database = "cmpe281"
 var mongodb_collection = "gumballgo"
 
+var username = "admin"
+var password = "megz3189"
 // NewServer configures and returns a Server.
 func NewServer() *negroni.Negroni {
 	formatter := render.New(render.Options{
@@ -54,11 +56,16 @@ func signupHandler(formatter *render.Render) http.HandlerFunc {
 		var user User
 		err := json.NewDecoder(req.Body).Decode(&user)
 		maxWait := time.Duration(5 * time.Second)
-		session, err := mgo.DialWithTimeout("localhost:27017", maxWait)
+		session, err := mgo.DialWithTimeout("10.0.1.145:27017", maxWait)
         if err != nil {
 				fmt.Println("Signup:", err )
                 panic(err)
-        }
+		}
+		admindb := session.DB("admin")
+		err = admindb.Login(username, password)
+		if err !=nil {
+			panic(err)
+		}
         defer session.Close()
         session.SetMode(mgo.Monotonic, true)
         c := session.DB(mongodb_database).C(mongodb_collection)
@@ -79,11 +86,16 @@ func loginHandler(formatter *render.Render) http.HandlerFunc {
 		var user User
 		err := json.NewDecoder(req.Body).Decode(&user)
 		maxWait := time.Duration(5 * time.Second)
-		session, err := mgo.DialWithTimeout("localhost:27017", maxWait)
+		session, err := mgo.DialWithTimeout("10.0.1.145:27017", maxWait)
         if err != nil {
 				fmt.Println("Signup:", err )
                 panic(err)
-        }
+		}
+		admindb := session.DB("admin")
+		err = admindb.Login(username, password)
+		if err !=nil {
+			panic(err)
+		}
         defer session.Close()
         session.SetMode(mgo.Monotonic, true)
 		c := session.DB(mongodb_database).C(mongodb_collection)
@@ -103,3 +115,9 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
 }
+
+db.createUser( {
+	user: "admin",
+	pwd: "megz3189",
+	roles: [{ role: "root", db: "admin" }]
+});

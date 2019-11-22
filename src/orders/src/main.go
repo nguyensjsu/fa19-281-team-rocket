@@ -104,6 +104,7 @@ var client *mongo.Client
 
 //creates new order (POST: /newOrder)
 func CreateNewOrder(response http.ResponseWriter, request *http.Request) {
+	enableCors(&response)
 	response.Header().Set("content-type", "application/json")
 	var orders Orders
 	_ = json.NewDecoder(request.Body).Decode(&orders)
@@ -119,6 +120,7 @@ func CreateNewOrder(response http.ResponseWriter, request *http.Request) {
 
 //get order by Id (GET: /order/{id})
 func GetOrderById(response http.ResponseWriter, request *http.Request) {
+	enableCors(&response)
 	response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
@@ -136,6 +138,7 @@ func GetOrderById(response http.ResponseWriter, request *http.Request) {
 
 //get Order status(GET: /order/{id})
 func GetOrderStatus(response http.ResponseWriter, request *http.Request) {
+	enableCors(&response)
 	response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
@@ -153,6 +156,7 @@ func GetOrderStatus(response http.ResponseWriter, request *http.Request) {
 
 //get all order(GET: /orders)
 func GetAllOrders(response http.ResponseWriter, request *http.Request) {
+	enableCors(&response)
 	response.Header().Set("content-type", "application/json")
 	var orders []Orders
 	collection := client.Database("mongo").Collection("orders")
@@ -179,6 +183,7 @@ func GetAllOrders(response http.ResponseWriter, request *http.Request) {
 
 //get all orders of a particular user (GET: /allOrdersByEmail/{uEmail})
 func GetAllOrdersByUserEmail(response http.ResponseWriter, request *http.Request) {
+	enableCors(&response)
 	response.Header().Set("content-type", "application/json")
 	//response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
@@ -210,6 +215,7 @@ func GetAllOrdersByUserEmail(response http.ResponseWriter, request *http.Request
 
 //get all orders by status (GET: /allOrdersByStatus/{status})
 func GetAllOrdersByStatus(response http.ResponseWriter, request *http.Request) {
+	enableCors(&response)
 	response.Header().Set("content-type", "application/json")
 	//response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
@@ -247,6 +253,7 @@ func GetAllOrdersByStatus(response http.ResponseWriter, request *http.Request) {
 
 //delete order by id (DELETE: /deleteOrder/{id})
 func DeleteById(response http.ResponseWriter, request *http.Request) {
+	enableCors(&response)
 	response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
@@ -262,6 +269,7 @@ func DeleteById(response http.ResponseWriter, request *http.Request) {
 
 //update order status (PUT: /updateOrderStatus/{id}/{status})
 func UpdateOrdeStatus(response http.ResponseWriter, request *http.Request) {
+	enableCors(&response)
 	response.Header().Set("content-type", "application/json")
 	//response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
@@ -285,6 +293,12 @@ func UpdateOrdeStatus(response http.ResponseWriter, request *http.Request) {
 	}
 	fmt.Println(result)
 	//response.Write([]byte(`{ "message": "` + + `" }`))
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 
 func main() {

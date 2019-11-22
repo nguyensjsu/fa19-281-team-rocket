@@ -16,7 +16,7 @@ import (
 )
 
 // MongoDB Config
-var mongodb_server = "10.0.3.176:27017"
+var mongodb_server = "10.0.3.176:27017,10.0.3.160:27017,10.0.3.208:27017"
 var mongodb_database = "inventory"
 var mongodb_collection = "items"
 
