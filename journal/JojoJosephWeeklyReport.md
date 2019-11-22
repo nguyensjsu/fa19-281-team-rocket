@@ -25,3 +25,7 @@ Task2 : ??
 WEEK 2 (11/16/19 - 11/23/19)
 
 11/16/19: Deployed mongo cluster, made docker images for the inventory microservice, deployed and tested the api
+11/22/19: Created AMI for launch configuration, made auto scaling group and attached it to the target group so that
+          Application scales based on load.
+          Created mongo shards for orders API in Harsh's AWS account. Sharding appears to be working fine for orders.
+          Created Architecture diagram for the system.
