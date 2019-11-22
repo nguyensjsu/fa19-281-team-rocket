@@ -58,10 +58,13 @@ placeOrder = (e) => {
   e.preventDefault();
 
   const data = {
-    card_number : this.state.card_number,
+    Id : "12",
+    CardNumber : this.state.card_number,
     expiry : this.state.expiry,
-    code : this.state.code,
-    zip : this.state.zip
+    Cvv : this.state.code,
+    Zipcode : this.state.zip,
+    UserEmail : localStorage.getItem("emailId"),
+    CartItems : []
       
   }
   //set the with credentials to true
