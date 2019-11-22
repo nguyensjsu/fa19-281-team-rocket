@@ -83,6 +83,8 @@ func addItemsToCart(formatter *render.Render) http.HandlerFunc {
 		if err != nil {
             log.Fatal(err)
 		}
+
+		formatter.JSON(w, http.StatusOK, "Added to cart successfully")
 		
 
 
@@ -168,7 +170,5 @@ func getCartItems(formatter *render.Render) http.HandlerFunc {
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
-
-
 
 }
