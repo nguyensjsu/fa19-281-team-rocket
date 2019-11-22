@@ -21,7 +21,7 @@ import (
 )
 
 // MongoDB Config
-var mongodb_server = "localhost"
+var mongodb_server = "10.0.1.243"
 var mongodb_database = "grubhub"
 // var mongodb_collection_cart = "cart"
 // var mongodb_collection_user = "user"
@@ -168,4 +168,7 @@ func getCartItems(formatter *render.Render) http.HandlerFunc {
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
+
+
+
 }
