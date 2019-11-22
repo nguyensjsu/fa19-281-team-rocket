@@ -15,10 +15,17 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	//"github.com/satori/go.uuid"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/unrolled/render"
 	"gopkg.in/mgo.v2"
-	//"gopkg.in/mgo.v2/bson"
+//	"gopkg.in/mgo.v2/bson"
+
+	"flag"
+
 	"net/http"
+	"os"
 )
 
 var mongodb_server = "10.0.1.18:27017"
@@ -45,7 +52,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/payments", getPaymentsHandler(formatter)).Methods("GET")
 	//	mx.HandleFunc("/payment/{id}", paymentDeleteHandler(formatter)).Methods("DELETE")
-	mx.HandleFunc("/payment", newPaymentHandler(formatter)).Methods("POST","OPTIONS")
+	mx.HandleFunc("/payment", newPaymentHandler(formatter)).Methods("POST", "OPTIONS")
 	mx.HandleFunc("/payment/{id}", getPaymentsHandler(formatter)).Methods("GET")
 }
 
@@ -53,6 +60,8 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 func pingHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 2.0 alive!"})
+		log.Println("1")
+	
 	}
 }
 
@@ -62,11 +71,11 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 		//	uuid, _ := uuid.NewV4()
 
 		enableCors(&w)
-		
+
 		if req.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return
-		} 
+		}
 		//	decoder := json.NewDecoder(req.Body)
 		var p payment
 		//err := decoder.Decode(&p)
@@ -115,17 +124,17 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 
 			log.Println(pay)
 
-			session, err := mgo.Dial(mongodb_server)
+			mongo_session, err := mgo.Dial(mongodb_server)
 			if err != nil {
 				panic(err)
 			}
-			defer session.Close()
-			admindb := session.DB("admin")
+			defer mongo_session.Close()
+			admindb := mongo_session.DB("admin")
 			err = admindb.Login(username, password)
 			if err != nil {
 				panic(err)
 			}
-			c := session.DB(mongodb_database).C(mongodb_collection)
+			c := mongo_session.DB(mongodb_database).C(mongodb_collection)
 			c.Insert(pay)
 			if err != nil {
 				log.Fatal(err)
@@ -136,7 +145,7 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 				log.Fatalln(err)
 			}
 
-			resp, err := http.Post("https://xy0os460h9.execute-api.us-west-2.amazonaws.com/prod/addToCart", "application/json", bytes.NewBuffer(bytesRepresentation))
+			resp, err := http.Post("http://34.219.240.229:8080/newOrder", "application/json", bytes.NewBuffer(bytesRepresentation))
 
 			if err != nil {
 				log.Fatalln(err)
@@ -151,6 +160,58 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 
 			fmt.Println("Payment: ", pay)
 			formatter.JSON(w, http.StatusOK, pay)
+
+			//Adding SNS
+			msgPtr := flag.String("m", "Your order is on its way", "The message to send to the subscribed users of the topic")
+			topicPtr := flag.String("t", "arn:aws:sns:us-east-2:166329604693:payments", "The ARN of the topic to which the user subscribes")
+			flag.Parse()
+			message := *msgPtr
+			topicArn := *topicPtr
+			log.Println("2")
+			if message == "" || topicArn == "" {
+				fmt.Println("You must supply a message and topic ARN")
+				fmt.Println("Usage: go run SnsPublish.go -m MESSAGE -t TOPIC-ARN")
+				os.Exit(1)
+			}
+			log.Println("3")
+
+			// sess := session.Must(session.NewSessionWithOptions(session.Options{
+			// 	//	Profile: "profile_name",
+
+			// 	Config: aws.Config{
+			// 		Region: aws.String("us-east-2a"),
+			// 	},
+			// }))
+
+			sess, err := session.NewSessionWithOptions(session.Options{
+				// Specify profile to load for the session's config
+				//Profile: "profile_name",
+
+				// Provide SDK Config options, such as Region.
+				Config: aws.Config{
+					Region: aws.String("us-east-2"),
+				},
+
+				// Force enable Shared Config support
+				//SharedConfigState: session.SharedConfigEnable,
+			})
+
+			log.Println("4")
+
+			svc := sns.New(sess)
+
+			res, err := svc.Publish(&sns.PublishInput{
+				Message:  aws.String(message),
+				TopicArn: topicPtr,
+			})
+
+			log.Println("5")
+			if err != nil {
+				fmt.Println(err.Error())
+				os.Exit(1)
+			}
+
+			fmt.Println(*res.MessageId)
 		}
 
 	}
@@ -206,5 +267,5 @@ func getPaymentsHandler(formatter *render.Render) http.HandlerFunc {
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
+	(*w).Header().Set("Access-Control-Allow-Headers", "*")
 }
