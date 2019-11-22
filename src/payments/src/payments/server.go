@@ -45,7 +45,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/payments", getPaymentsHandler(formatter)).Methods("GET")
 	//	mx.HandleFunc("/payment/{id}", paymentDeleteHandler(formatter)).Methods("DELETE")
-	mx.HandleFunc("/payment", newPaymentHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/payment", newPaymentHandler(formatter)).Methods("POST","OPTIONS")
 	mx.HandleFunc("/payment/{id}", getPaymentsHandler(formatter)).Methods("GET")
 }
 
@@ -61,7 +61,12 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		//	uuid, _ := uuid.NewV4()
 
-		//	enableCors(&w)
+		enableCors(&w)
+		
+		if req.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		} 
 		//	decoder := json.NewDecoder(req.Body)
 		var p payment
 		//err := decoder.Decode(&p)
