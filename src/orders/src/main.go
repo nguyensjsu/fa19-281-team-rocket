@@ -105,6 +105,10 @@ var client *mongo.Client
 //creates new order (POST: /newOrder)
 func CreateNewOrder(response http.ResponseWriter, request *http.Request) {
 	enableCors(&response)
+	if request.Method == "OPTIONS" {
+		response.WriteHeader(http.StatusOK)
+		return
+	}
 	response.Header().Set("content-type", "application/json")
 	var orders Orders
 	_ = json.NewDecoder(request.Body).Decode(&orders)
@@ -184,6 +188,10 @@ func GetAllOrders(response http.ResponseWriter, request *http.Request) {
 //get all orders of a particular user (GET: /allOrdersByEmail/{uEmail})
 func GetAllOrdersByUserEmail(response http.ResponseWriter, request *http.Request) {
 	enableCors(&response)
+	if request.Method == "OPTIONS" {
+		response.WriteHeader(http.StatusOK)
+		return
+	}
 	response.Header().Set("content-type", "application/json")
 	//response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
@@ -318,5 +326,5 @@ func main() {
 	router.HandleFunc("/allOrdersByEmail/{uEmail}", GetAllOrdersByUserEmail).Methods("GET")
 	router.HandleFunc("/deleteOrder/{id}", DeleteById).Methods("DELETE")
 	router.HandleFunc("/updateOrderStatus/{id}/{status}", UpdateOrdeStatus).Methods("PUT")
-	http.ListenAndServe(":12345", router)
+	http.ListenAndServe(":8080", router)
 }
