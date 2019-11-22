@@ -65,7 +65,7 @@ placeOrder = (e) => {
       
   }
   //set the with credentials to true
-  axios.defaults.withCredentials = true;
+  //axios.defaults.withCredentials = true;
   //make a post request with the user data
   axios.post('https://ilfey0iy29.execute-api.us-east-2.amazonaws.com/prod/payment',data)
       .then(response => {
