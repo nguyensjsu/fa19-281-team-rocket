@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	//	"time"
-		"bytes"
+	"bytes"
 	"log"
 
 	"github.com/codegangsta/negroni"
@@ -45,7 +45,7 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.HandleFunc("/ping", pingHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/payments", getPaymentsHandler(formatter)).Methods("GET")
 	//	mx.HandleFunc("/payment/{id}", paymentDeleteHandler(formatter)).Methods("DELETE")
-	mx.HandleFunc("/payment", newPaymentHandler(formatter)).Methods("POST")
+	mx.HandleFunc("/payment", newPaymentHandler(formatter)).Methods("POST","OPTIONS")
 	mx.HandleFunc("/payment/{id}", getPaymentsHandler(formatter)).Methods("GET")
 }
 
@@ -61,7 +61,12 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		//	uuid, _ := uuid.NewV4()
 
-		//	enableCors(&w)
+		enableCors(&w)
+		
+		if req.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		} 
 		//	decoder := json.NewDecoder(req.Body)
 		var p payment
 		//err := decoder.Decode(&p)
@@ -142,7 +147,7 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 			json.NewDecoder(resp.Body).Decode(&result)
 
 			log.Println(result)
-		//	log.Println("Data stored ", result["data"])
+			//	log.Println("Data stored ", result["data"])
 
 			fmt.Println("Payment: ", pay)
 			formatter.JSON(w, http.StatusOK, pay)
@@ -159,7 +164,7 @@ func getPaymentsHandler(formatter *render.Render) http.HandlerFunc {
 		// if req.Method == "OPTIONS" {
 		// 	w.WriteHeader(http.StatusOK)
 		// 	return
-		// } 
+		// }
 
 		enableCors(&w)
 		params := mux.Vars(req)
@@ -189,7 +194,6 @@ func getPaymentsHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 
-
 // func addCorsHeader(res http.ResponseWriter) {
 //     headers := res.Header()
 //     headers.Add("Access-Control-Allow-Origin", "*")
@@ -202,6 +206,5 @@ func getPaymentsHandler(formatter *render.Render) http.HandlerFunc {
 
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "")
+	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
 }
