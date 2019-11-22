@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Table } from "reactstrap";
+import { NavItem , NavLink} from "reactstrap";
 import { Redirect } from "react-router-dom";
-import { Route, withRouter } from "react-router-dom";
+import { browserHistory } from 'react-router'
+
 import {
   Navbar,
   Nav,
@@ -25,7 +26,8 @@ class Header extends Component {
       itemSubTotal: 0,
       price: 0,
       orderedItems: [],
-      redirectToPayments: false
+      redirectToPayments: false,
+      redirectToLogin : false
     };
   }
 
@@ -79,6 +81,13 @@ class Header extends Component {
     //return <Redirect to="/payment" />;
   };
 
+  logout = () =>{
+      localStorage.removeItem("emailId");
+      console.log("Redirecting")
+      this.setState({redirectToLogin:true})
+      
+  }
+
   render() {
     let items = this.state.orderedItems.map(oitem => {
       return (
@@ -102,12 +111,29 @@ class Header extends Component {
             }}
           />
         )}
+
+
+        {this.state.redirectToLogin && (
+          <Redirect
+            to={{
+              pathname: "/login",
+            }}
+          />
+        )}
         <div className="header">
           <Navbar color="" light expand="md">
             <h1 style={{ color: "red" }}>
               <span className="font-weight-bold">GrubHub</span>
             </h1>
             <Nav className="ml-auto" navbar>
+             
+             
+              <NavItem>
+                <NavLink href="/user">User Orders</NavLink>
+                </NavItem>
+              <NavItem>
+                 <NavLink href="/inventory">Menu</NavLink>
+              </NavItem>  
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret onClick={this.getCartItems}>
                   Options
@@ -134,6 +160,18 @@ class Header extends Component {
                       Proceed to Checkout
                     </Button>
                   </DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem>
+                    <Button
+                      onClick={() =>
+                           this.logout()
+                      }
+                      color="success"
+                    >
+                      SignOut
+                    </Button>
+                  </DropdownItem>
+                   
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>
