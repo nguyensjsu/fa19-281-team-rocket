@@ -42,7 +42,7 @@ class Login extends Component {
         console.log("Status Code : ", response.status);
         if (response.status === 200) {
           localStorage.setItem("emailId", this.state.userEmail);
-          this.props.history.push("/user");
+          this.props.history.push("/inventory");
         } else {
           window.alert("Invalid Login!!");
         }

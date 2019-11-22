@@ -116,8 +116,3 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
 }
 
-db.createUser( {
-	user: "admin",
-	pwd: "megz3189",
-	roles: [{ role: "root", db: "admin" }]
-});
