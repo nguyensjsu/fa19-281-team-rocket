@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	//	"time"
-		"bytes"
+	"bytes"
 	"log"
 
 	"github.com/codegangsta/negroni"
@@ -142,7 +142,7 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 			json.NewDecoder(resp.Body).Decode(&result)
 
 			log.Println(result)
-		//	log.Println("Data stored ", result["data"])
+			//	log.Println("Data stored ", result["data"])
 
 			fmt.Println("Payment: ", pay)
 			formatter.JSON(w, http.StatusOK, pay)
@@ -159,7 +159,7 @@ func getPaymentsHandler(formatter *render.Render) http.HandlerFunc {
 		// if req.Method == "OPTIONS" {
 		// 	w.WriteHeader(http.StatusOK)
 		// 	return
-		// } 
+		// }
 
 		enableCors(&w)
 		params := mux.Vars(req)
@@ -188,7 +188,6 @@ func getPaymentsHandler(formatter *render.Render) http.HandlerFunc {
 		}
 	}
 }
-
 
 // func addCorsHeader(res http.ResponseWriter) {
 //     headers := res.Header()
