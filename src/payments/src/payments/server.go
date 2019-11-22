@@ -21,7 +21,7 @@ import (
 	"net/http"
 )
 
-var mongodb_server = "3.134.209.160:27017"
+var mongodb_server = "10.0.1.18:27017"
 var mongodb_database = "store"
 var mongodb_collection = "payments"
 
@@ -156,6 +156,12 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 func getPaymentsHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
+		// if req.Method == "OPTIONS" {
+		// 	w.WriteHeader(http.StatusOK)
+		// 	return
+		// } 
+
+		enableCors(&w)
 		params := mux.Vars(req)
 		var uuid string = params["id"]
 		fmt.Println("Payment ID: ", uuid)
@@ -181,4 +187,21 @@ func getPaymentsHandler(formatter *render.Render) http.HandlerFunc {
 			formatter.JSON(w, http.StatusOK, payment)
 		}
 	}
+}
+
+
+// func addCorsHeader(res http.ResponseWriter) {
+//     headers := res.Header()
+//     headers.Add("Access-Control-Allow-Origin", "*")
+//     headers.Add("Vary", "Origin")
+//     headers.Add("Vary", "Access-Control-Request-Method")
+//     headers.Add("Vary", "Access-Control-Request-Headers")
+//     headers.Add("Access-Control-Allow-Headers", "Content-Type, Origin, Accept, token")
+//     headers.Add("Access-Control-Allow-Methods", "GET, POST,OPTIONS")
+// }
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "")
 }
