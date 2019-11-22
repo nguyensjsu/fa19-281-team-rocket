@@ -64,6 +64,13 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 func addItemsToCart(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		enableCors(&w)
+		
+		if req.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		} 
+
+		
 		decoder := json.NewDecoder(req.Body)
 		var cart Cart
 		err := decoder.Decode(&cart)
@@ -170,5 +177,7 @@ func getCartItems(formatter *render.Render) http.HandlerFunc {
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Headers", "*") 
+	(*w).Header().Set("Access-Control-Allow-Methods", "*") 
+
 
 }
