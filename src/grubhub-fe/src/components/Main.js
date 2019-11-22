@@ -6,6 +6,7 @@ import User from "./User";
 import Inventory from "./Item";
 import Header from "./Header";
 import Payment from "./Payment";
+import Order from "./Order";
 
 class Main extends Component {
   state = {};
@@ -18,6 +19,7 @@ class Main extends Component {
         <Route path="/user" component={User} />
         <Route path="/inventory" component={Inventory} />
         <Route path="/payment" component={Payment} />
+        <Route path="/order" component={Order} />
       </div>
     );
   }

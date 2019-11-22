@@ -76,6 +76,8 @@ class Payment extends Component {
           this.setState({
             status: "Payment Successful,Order placed"
           });
+
+          this.props.history.push("/Order");
         } else {
           this.setState({
             status: "Invalid details..please enter again"
