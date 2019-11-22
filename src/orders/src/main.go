@@ -304,7 +304,7 @@ func enableCors(w *http.ResponseWriter) {
 func main() {
 	fmt.Println("Starting the application...")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://admin:admin@10.0.1.211:27017")
 	client, _ = mongo.Connect(ctx, clientOptions)
 	router := mux.NewRouter()
 	//router.HandleFunc("/person", CreatePersonEndpoint).Methods("POST")
