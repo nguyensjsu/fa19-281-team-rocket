@@ -30,37 +30,43 @@ class Header extends Component {
   }
 
   componentDidMount() {
-    axios.get(ROOT_URL + `cartItems/sam.mam@gmail.com`).then(response => {
-      var data = response.data;
-      console.log("Item", data);
-      var itemSubTotal = 0;
-      data.map(v => {
-        var intprice = parseInt(v.price);
-        var intquantity = parseInt(v.quantity);
-        console.log(intprice);
-        console.log(intquantity);
-        itemSubTotal += intprice * intquantity;
-      });
-      this.setState({ itemSubTotal });
-      this.setState({ orderedItems: data });
-    });
+    // axios.get(ROOT_URL + `cartItems/sam.mam@gmail.com`).then(response => {
+    //   var data = response.data;
+    //   console.log("Item", data);
+    //   var itemSubTotal = 0;
+    //   data.map(v => {
+    //     var intprice = parseInt(v.price);
+    //     var intquantity = parseInt(v.quantity);
+    //     console.log(intprice);
+    //     console.log(intquantity);
+    //     itemSubTotal += intprice * intquantity;
+    //   });
+    //   this.setState({ itemSubTotal });
+    //   this.setState({ orderedItems: data });
+    // });
   }
 
   getCartItems = e => {
     console.log("Calling getCart items api");
-    axios.get(ROOT_URL + `cartItems/sam.mam@gmail.com`).then(response => {
+    axios.get(ROOT_URL + `cartItems/`+localStorage.getItem("emailId")).then(response => {
       var data = response.data;
       console.log("Item", data);
       var itemSubTotal = 0;
-      data.map(v => {
-        var intprice = parseInt(v.price);
-        var intquantity = parseInt(v.quantity);
-        console.log(intprice);
-        console.log(intquantity);
-        itemSubTotal += intprice * intquantity;
-      });
+      if(data !== null )
+      {
+        data.map(v => {
+          var intprice = parseInt(v.price);
+          var intquantity = parseInt(v.quantity);
+          console.log(intprice);
+          console.log(intquantity);
+          itemSubTotal += intprice * intquantity;
+        });
+       
+        this.setState({ orderedItems: data });
+      }
       this.setState({ itemSubTotal });
-      this.setState({ orderedItems: data });
+      
+     
     });
   };
 

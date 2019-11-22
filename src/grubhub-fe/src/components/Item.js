@@ -75,6 +75,8 @@ class Inventory extends Component {
   handleAddToCartClicked = item => {
     console.log("Inventory", item);
     //Post to cart
+    if(item.qnty > 0)
+    {
     axios
       .post(
         "https://xy0os460h9.execute-api.us-west-2.amazonaws.com/prod/addToCart",
@@ -83,7 +85,7 @@ class Inventory extends Component {
           Quantity: "" + item.qnty,
           Item: item.Name,
           Price: item.Price,
-          UserEmail: "sam.mam@gmail.com"
+          UserEmail: localStorage.getItem("emailId")
         }
       )
       .then(res => {
@@ -91,7 +93,8 @@ class Inventory extends Component {
         console.log(res);
         //this.setState({ items });
       });
-    //updateCart();
+    } 
+ 
   };
 
   componentDidMount() {
