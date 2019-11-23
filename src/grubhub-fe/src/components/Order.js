@@ -10,6 +10,8 @@ class Order extends Component{
             <div class="col-md-3"  style = { { left : "250px", top : "100px" ,width : "250px",color : "green", border: "1px solid green", padding :"10px"}  }>
 
             <h3> Order placed</h3>
+
+         
             </div>
             </Container>
         
