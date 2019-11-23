@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, Form, FormGroup, Input, Label, Table } from "reactstrap";
 import "../App.css";
 import axios from "axios";
+import Header from "./Header";
 
 class User extends Component {
   state = {
@@ -26,8 +27,12 @@ class User extends Component {
     let name = localStorage.getItem("name");
     if (orders != null) {
       return (
+     
+        
         <div>
+          <Header />
           <Form className="login-page">
+            
             <h1 className="text-center" style={{ color: "red" }}>
               <span className="font-weight-bold">SpartanHub</span>
             </h1>
@@ -60,13 +65,17 @@ class User extends Component {
     } else {
       let name = localStorage.getItem("name");
       return (
+        <div>
+        <Header />
         <Form className="login-page">
+          
           <h1 className="text-center" style={{ color: "red" }}>
             <span className="font-weight-bold">R-Tea</span>
           </h1>
           <h2 className="text-center">Welcome {name}</h2>
           <h3 className="text-center">No Orders Found!!!</h3>
         </Form>
+        </div>
       );
     }
   }
