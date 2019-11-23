@@ -34,3 +34,8 @@ Implemented online store for a restaurant using 5 microservices deployed in AWS 
  * Continuous deployment was setup for frontend application deployed on Heroku. This was achived using Github Actions. For every push that occurs to master repository, the React application subtree is pushed to Heroku master repository using Heroku API key. This ensures that any UI changes pushed to master is automatically deployed.
 
 ## Application Flow Gif
+![Gif](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/journal/SpartanEats.gif)
+
+## Slides
+![Slides](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/SpartanHub.pptx)
+

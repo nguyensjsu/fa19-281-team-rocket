@@ -8,6 +8,7 @@ WEEK 1 (11/09/19 - 11/15/19)
 11/11/19 : Discussed everyone's ideas and finalised project idea similar to grubhub, divided services among team
 11/12/19 : Learnt basic go lang commands
 11/13/19 : Learnt basic React coding
+11/14/19 : Created login and signup backend Go API
 
 Planned Next Week :
 
@@ -19,11 +20,13 @@ Problems :
 No blockers
 
 Time to spend:
-Task1 : 6hours
+Task1 : 5h
+Task2 : 1h
+Task3 : 2h
 
-WEEK 1 (11/16/19 - 11/23/19)
+WEEK 2 (11/16/19 - 11/23/19)
 
-11/16/2019 - Created go services and login, signup, user profile React pages.
+11/16/2019 - Created go backend services and login, signup, user profile React pages.
 11/17/2019 - Set up MongoDB Replica set
 11/18/2019 - Deployed docker images on EC2 instances. Integrated EC2 instances with MongoDB replicaset, Network ELB and AWS API Gateway
 11/19/2019 - Tried to set up Kong API Gateway. Created HTTPS endpoint for Kong service. Used self-signed certificate and hence was getting Insecure website error.
