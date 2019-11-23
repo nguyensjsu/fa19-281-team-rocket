@@ -45,7 +45,7 @@ class Signup extends Component {
 
     axios
       .post(
-        "http://ec2-54-202-129-2.us-west-2.compute.amazonaws.com:8000/signup",
+        "https://1px6zgas05.execute-api.us-west-2.amazonaws.com/prod/signup",
         data
       )
       .then(response => {
