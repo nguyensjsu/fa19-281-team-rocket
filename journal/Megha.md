@@ -8,6 +8,7 @@ WEEK 1 (11/09/19 - 11/15/19)
 11/11/19 : Discussed everyone's ideas and finalised project idea similar to grubhub, divided services among team
 11/12/19 : Learnt basic go lang commands
 11/13/19 : Learnt basic React coding
+11/14/19 : Created login and signup backend Go API
 
 Planned Next Week :
 
@@ -19,7 +20,9 @@ Problems :
 No blockers
 
 Time to spend:
-Task1 : 6hours
+Task1 : 5h
+Task2 : 1h
+Task3 :
 
 WEEK 2 (11/16/19 - 11/23/19)
 
