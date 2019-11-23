@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { NavItem , NavLink} from "reactstrap";
+import { NavItem, NavLink } from "reactstrap";
 import { Redirect } from "react-router-dom";
-import { browserHistory } from 'react-router'
+import { browserHistory } from "react-router";
 
 import {
   Navbar,
@@ -27,7 +27,7 @@ class Header extends Component {
       price: 0,
       orderedItems: [],
       redirectToPayments: false,
-      redirectToLogin : false
+      redirectToLogin: false
     };
   }
 
@@ -50,26 +50,25 @@ class Header extends Component {
 
   getCartItems = e => {
     console.log("Calling getCart items api");
-    axios.get(ROOT_URL + `cartItems/`+localStorage.getItem("emailId")).then(response => {
-      var data = response.data;
-      console.log("Item", data);
-      var itemSubTotal = 0;
-      if(data !== null )
-      {
-        data.map(v => {
-          var intprice = parseInt(v.price);
-          var intquantity = parseInt(v.quantity);
-          console.log(intprice);
-          console.log(intquantity);
-          itemSubTotal += intprice * intquantity;
-        });
-       
-        this.setState({ orderedItems: data });
-      }
-      this.setState({ itemSubTotal });
-      
-     
-    });
+    axios
+      .get(ROOT_URL + `cartItems/` + localStorage.getItem("emailId"))
+      .then(response => {
+        var data = response.data;
+        console.log("Item", data);
+        var itemSubTotal = 0;
+        if (data !== null) {
+          data.map(v => {
+            var intprice = parseInt(v.price);
+            var intquantity = parseInt(v.quantity);
+            console.log(intprice);
+            console.log(intquantity);
+            itemSubTotal += intprice * intquantity;
+          });
+
+          this.setState({ orderedItems: data });
+        }
+        this.setState({ itemSubTotal });
+      });
   };
 
   handleCheckout = orderedItems => {
@@ -81,12 +80,11 @@ class Header extends Component {
     //return <Redirect to="/payment" />;
   };
 
-  logout = () =>{
-      localStorage.removeItem("emailId");
-      console.log("Redirecting")
-      this.setState({redirectToLogin:true})
-      
-  }
+  logout = () => {
+    localStorage.removeItem("emailId");
+    console.log("Redirecting");
+    this.setState({ redirectToLogin: true });
+  };
 
   render() {
     let items = this.state.orderedItems.map(oitem => {
@@ -112,28 +110,25 @@ class Header extends Component {
           />
         )}
 
-
         {this.state.redirectToLogin && (
           <Redirect
             to={{
-              pathname: "/login",
+              pathname: "/login"
             }}
           />
         )}
         <div className="header">
           <Navbar color="" light expand="md">
             <h1 style={{ color: "red" }}>
-              <span className="font-weight-bold">GrubHub</span>
+              <span className="font-weight-bold">SpartanHub</span>
             </h1>
             <Nav className="ml-auto" navbar>
-             
-             
               <NavItem>
                 <NavLink href="/user">User Orders</NavLink>
-                </NavItem>
+              </NavItem>
               <NavItem>
-                 <NavLink href="/inventory">Menu</NavLink>
-              </NavItem>  
+                <NavLink href="/inventory">Menu</NavLink>
+              </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret onClick={this.getCartItems}>
                   Options
@@ -162,16 +157,10 @@ class Header extends Component {
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem>
-                    <Button
-                      onClick={() =>
-                           this.logout()
-                      }
-                      color="success"
-                    >
+                    <Button onClick={() => this.logout()} color="success">
                       SignOut
                     </Button>
                   </DropdownItem>
-                   
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>

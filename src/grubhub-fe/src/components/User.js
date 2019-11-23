@@ -12,7 +12,10 @@ class User extends Component {
   componentWillMount() {
     let email = localStorage.getItem("emailId");
     axios
-      .get("http://34.219.240.229:8080/allOrdersByEmail/" + email)
+      .get(
+        "https://298ptylar8.execute-api.us-west-2.amazonaws.com/prod/allOrdersByEmail/" +
+          email
+      )
       .then(response => {
         console.log("Status Code : ", response.status);
         if (response.status === 200) {
@@ -27,12 +30,9 @@ class User extends Component {
     let name = localStorage.getItem("name");
     if (orders != null) {
       return (
-     
-        
         <div>
           <Header />
           <Form className="login-page">
-            
             <h1 className="text-center" style={{ color: "red" }}>
               <span className="font-weight-bold">SpartanHub</span>
             </h1>
@@ -66,15 +66,14 @@ class User extends Component {
       let name = localStorage.getItem("name");
       return (
         <div>
-        <Header />
-        <Form className="login-page">
-          
-          <h1 className="text-center" style={{ color: "red" }}>
-            <span className="font-weight-bold">R-Tea</span>
-          </h1>
-          <h2 className="text-center">Welcome {name}</h2>
-          <h3 className="text-center">No Orders Found!!!</h3>
-        </Form>
+          <Header />
+          <Form className="login-page">
+            <h1 className="text-center" style={{ color: "red" }}>
+              <span className="font-weight-bold">SpartanHub</span>
+            </h1>
+            <h2 className="text-center">Welcome {name}</h2>
+            <h3 className="text-center">No Orders Found!!!</h3>
+          </Form>
         </div>
       );
     }
