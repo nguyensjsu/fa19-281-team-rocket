@@ -4,9 +4,9 @@ To run cart service in an EKS cluster
 # Steps
 ## Create IAM roles and policies:
  - Cluster Admin
-   ![eks1]()
+ ![eks1](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/extra_credit/cluster%20admin.png)
  - Cluster user
-   ![eks2]()
+ ![eks2](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/extra_credit/cluster%20user.png)
 ## Create VPC and subnets
 Created VPC,subnets and security groups using CloudFormation stack 
 https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2019-11-15/amazon-eks-vpc-sample.yaml
