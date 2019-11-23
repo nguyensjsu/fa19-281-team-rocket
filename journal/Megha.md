@@ -21,7 +21,7 @@ No blockers
 Time to spend:
 Task1 : 6hours
 
-WEEK 1 (11/16/19 - 11/23/19)
+WEEK 2 (11/16/19 - 11/23/19)
 
 11/16/2019 - Created go services and login, signup, user profile React pages.
 11/17/2019 - Set up MongoDB Replica set
