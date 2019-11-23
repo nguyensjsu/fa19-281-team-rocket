@@ -15,4 +15,4 @@ git subtree push --prefix src/grubhub-fe https://heroku:$HEROKU_API_TOKEN@git.he
 Storing API token in env is unsafe and should have been done as Secret env in github. But this also requires admin access.
 
 # Result
-![Image](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/extra_credit/CI_CD.jpg)
+![Image](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/extra_credit/DEVOPS/CI_CD.jpg)
