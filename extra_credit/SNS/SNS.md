@@ -14,9 +14,24 @@ after his payment is successful.
 
 # Code
 
+https://github.com/nguyensjsu/fa19-281-team-rocket/tree/master/src/payments/src/payments
 
 # Result
 
+- Topic creation
+![Image](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/extra_credit/SNS/screenshots/payments_topic.png)
+
+- Subscription Confirmation email
+![Image](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/extra_credit/SNS/screenshots/subscribe_confirmation.png)
+
+- Payment successful notification 
+![Image](https://github.com/nguyensjsu/fa19-281-team-rocket/blob/master/extra_credit/SNS/screenshots/payment_success.png)
 
 # Resources
+
+https://aws.amazon.com/sns/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc
+
+https://docs.aws.amazon.com/sdk-for-go/api/service/sns/#SNS.CreateTopic
+
+https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/using-sns-with-go-sdk.html
 
