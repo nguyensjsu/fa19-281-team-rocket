@@ -1,7 +1,7 @@
 # Team Hackathon Project
 ## Topic of Project
 SpartanHub - SAAS Application for ordering food from a restaurant. Deployed on Amazon Cloud and Heroku.
-* Technologies used : ReactJS, Go, MongoDB, Docker, Kubernetes, Kong
+* Technologies used : ReactJS, Go, MongoDB, Docker, Kubernetes, Kong, AWS
 
 ## Team Members
  * [Deepika Yannamani](https://github.com/deepikay912)
