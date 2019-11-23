@@ -29,7 +29,7 @@ class User extends Component {
         <div>
           <Form className="login-page">
             <h1 className="text-center" style={{ color: "red" }}>
-              <span className="font-weight-bold">R-Tea</span>
+              <span className="font-weight-bold">SpartanHub</span>
             </h1>
             <h2 className="text-center">Welcome {name}</h2>
           </Form>

@@ -45,7 +45,7 @@ class Signup extends Component {
 
     axios
       .post(
-        "https://1px6zgas05.execute-api.us-west-2.amazonaws.com/prod/signup",
+        "http://ec2-54-202-129-2.us-west-2.compute.amazonaws.com:8000/signup",
         data
       )
       .then(response => {
@@ -64,7 +64,7 @@ class Signup extends Component {
     return (
       <Form className="login-page">
         <h1 className="text-center" style={{ color: "red" }}>
-          <span className="font-weight-bold">R-Tea</span>
+          <span className="font-weight-bold">SpartanHub</span>
         </h1>
         <h2 className="text-center">Sign up</h2>
         <FormGroup>
