@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, FormGroup, Input, Label, Table } from "reactstrap";
+import { Form, Input, Label, Table } from "reactstrap";
 import "../App.css";
 import axios from "axios";
 import Header from "./Header";
