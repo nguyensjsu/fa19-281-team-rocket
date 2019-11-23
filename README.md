@@ -7,7 +7,7 @@ SpartanHub - SAAS Application for ordering food from a restaurant. Deployed on A
  * [Deepika Yannamani](https://github.com/deepikay912)
  * [Harshraj Mahesh](https://github.com/harshrajm)
  * [Jojo Joseph](https://github.com/jojojoseph94)
- * [Megha Malhotra](https://github.com/megha-31)
+ * [Megha Lnu](https://github.com/megha-31)
  * [Vaishnavi Ramesh](https://github.com/iivaishnavii)
 
 ## Contributions
