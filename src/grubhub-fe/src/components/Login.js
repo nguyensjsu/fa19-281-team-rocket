@@ -35,7 +35,7 @@ class Login extends Component {
 
     axios
       .post(
-        "https://1px6zgas05.execute-api.us-west-2.amazonaws.com/prod/login",
+        "http://ec2-54-202-129-2.us-west-2.compute.amazonaws.com:8000/login",
         data
       )
       .then(response => {
@@ -51,7 +51,7 @@ class Login extends Component {
     return (
       <Form className="login-page">
         <h1 className="text-center" style={{ color: "red" }}>
-          <span className="font-weight-bold">R-Tea</span>
+          <span className="font-weight-bold">SpartanHub</span>
         </h1>
         <h2 className="text-center">Login</h2>
         <FormGroup>
@@ -76,7 +76,7 @@ class Login extends Component {
         >
           Login
         </Button>
-        <div className="text-center pt-3">New to Rocket Restaurent?</div>
+        <div className="text-center pt-3">New to SpartanHub?</div>
         <div className="text-center">
           <a href="/signup">Signup</a>
         </div>
