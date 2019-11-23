@@ -22,7 +22,7 @@ No blockers
 Time to spend:
 Task1 : 5h
 Task2 : 1h
-Task3 :
+Task3 : 2h
 
 WEEK 2 (11/16/19 - 11/23/19)
 
