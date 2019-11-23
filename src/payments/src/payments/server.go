@@ -62,50 +62,6 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 		formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 2.0 alive!"})
 		log.Println("1")
 
-		// emailPtr := flag.String("e", "megha3131@gmail.com", "The email address of the user subscribing to the topic")
-		// topicPtr := flag.String("t", "arn:aws:sns:us-east-2:166329604693:payments", "The ARN of the topic to which the user subscribes")
-		// flag.Parse()
-		// email := *emailPtr
-		// topicArn := *topicPtr
-
-		// if email == "" || topicArn == "" {
-		// 	fmt.Println("You must supply an email address and topic ARN")
-		// 	fmt.Println("Usage: go run SnsSubscribe.go -e EMAIL -t TOPIC-ARN")
-		// 	os.Exit(1)
-		// }
-
-		// // Initialize a session that the SDK will use to load
-		// // credentials from the shared credentials file. (~/.aws/credentials).
-		// sess, err := session.NewSessionWithOptions(session.Options{
-		// 	// Specify profile to load for the session's config
-		// 	//Profile: "profile_name",
-
-		// 	// Provide SDK Config options, such as Region.
-		// 	Config: aws.Config{
-		// 		Region: aws.String("us-east-2"),
-		// 	},
-
-		// 	// Force enable Shared Config support
-		// 	//SharedConfigState: session.SharedConfigEnable,
-		// })
-
-		// svc := sns.New(sess)
-
-		// result, err := svc.Subscribe(&sns.SubscribeInput{
-		// 	Endpoint:              emailPtr,
-		// 	Protocol:              aws.String("email"),
-		// 	ReturnSubscriptionArn: aws.Bool(true), // Return the ARN, even if user has yet to confirm
-		// 	TopicArn:              topicPtr,
-		// })
-		// if err != nil {
-		// 	fmt.Println(err.Error())
-		// 	os.Exit(1)
-		// }
-
-		// fmt.Println(*result.SubscriptionArn)
-
-
-
 		//defer svc.Close()
 
 	}
@@ -191,7 +147,7 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 				log.Fatalln(err)
 			}
 
-			resp, err := http.Post("http://34.219.240.229:8080/newOrder", "application/json", bytes.NewBuffer(bytesRepresentation))
+			resp, err := http.Post("https://298ptylar8.execute-api.us-west-2.amazonaws.com/prod/newOrder", "application/json", bytes.NewBuffer(bytesRepresentation))
 
 			if err != nil {
 				log.Fatalln(err)
@@ -208,61 +164,60 @@ func newPaymentHandler(formatter *render.Render) http.HandlerFunc {
 			formatter.JSON(w, http.StatusOK, pay)
 
 			//Adding SNS
-		
-	//		defer svc.Close()
 
+			//		defer svc.Close()
 
-	msgPtr := flag.String("m", "Your payment is successful, order is on your way.. Enjoy :)", "The message to send to the subscribed users of the topic")
-	topicPtr := flag.String("t", "arn:aws:sns:us-east-2:166329604693:payments", "The ARN of the topic to which the user subscribes")
-	flag.Parse()
-	message := *msgPtr
-	topicArn := *topicPtr
-	log.Println("2")
-	if message == "" || topicArn == "" {
-		fmt.Println("You must supply a message and topic ARN")
-		fmt.Println("Usage: go run SnsPublish.go -m MESSAGE -t TOPIC-ARN")
-		os.Exit(1)
-	}
-	log.Println("3")
+			msgPtr := flag.String("m", "Your payment is successful, order is on your way.. Enjoy :)", "The message to send to the subscribed users of the topic")
+			topicPtr := flag.String("t", "arn:aws:sns:us-east-2:166329604693:payments", "The ARN of the topic to which the user subscribes")
+			flag.Parse()
+			message := *msgPtr
+			topicArn := *topicPtr
+			log.Println("2")
+			if message == "" || topicArn == "" {
+				fmt.Println("You must supply a message and topic ARN")
+				fmt.Println("Usage: go run SnsPublish.go -m MESSAGE -t TOPIC-ARN")
+				os.Exit(1)
+			}
+			log.Println("3")
 
-	// sess := session.Must(session.NewSessionWithOptions(session.Options{
-	// 	//	Profile: "profile_name",
+			// sess := session.Must(session.NewSessionWithOptions(session.Options{
+			// 	//	Profile: "profile_name",
 
-	// 	Config: aws.Config{
-	// 		Region: aws.String("us-east-2a"),
-	// 	},
-	// }))
+			// 	Config: aws.Config{
+			// 		Region: aws.String("us-east-2a"),
+			// 	},
+			// }))
 
-	sess, err := session.NewSessionWithOptions(session.Options{
-		// Specify profile to load for the session's config
-		//Profile: "profile_name",
+			sess, err := session.NewSessionWithOptions(session.Options{
+				// Specify profile to load for the session's config
+				//Profile: "profile_name",
 
-		// Provide SDK Config options, such as Region.
-		Config: aws.Config{
-			Region: aws.String("us-east-2"),
-		},
+				// Provide SDK Config options, such as Region.
+				Config: aws.Config{
+					Region: aws.String("us-east-2"),
+				},
 
-		// Force enable Shared Config support
-		//SharedConfigState: session.SharedConfigEnable,
-	})
+				// Force enable Shared Config support
+				//SharedConfigState: session.SharedConfigEnable,
+			})
 
-	log.Println("4")
+			log.Println("4")
 
-	svc := sns.New(sess)
+			svc := sns.New(sess)
 
-	res, err := svc.Publish(&sns.PublishInput{
-		Message:  aws.String(message),
-		TopicArn: topicPtr,
-		//TargetArn : aws.String("deepika.yannamani@sjsu.edu"),
-	})
+			res, err := svc.Publish(&sns.PublishInput{
+				Message:  aws.String(message),
+				TopicArn: topicPtr,
+				//TargetArn : aws.String("deepika.yannamani@sjsu.edu"),
+			})
 
-	log.Println("5")
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
+			log.Println("5")
+			if err != nil {
+				fmt.Println(err.Error())
+				os.Exit(1)
+			}
 
-	fmt.Println(*res.MessageId)
+			fmt.Println(*res.MessageId)
 		}
 
 	}
