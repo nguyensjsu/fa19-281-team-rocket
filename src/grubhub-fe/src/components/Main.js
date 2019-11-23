@@ -20,7 +20,6 @@ class Main extends Component {
         <Route path="/inventory" component={Inventory} />
         <Route path="/payment" component={Payment} />
         <Route path="/order" component={Order} />
-        <Route path="/" component={Login} />
       </div>
     );
   }
